@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Matematická expedice – opakování učiva 3. ročníku</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap&subset=latin-ext" rel="stylesheet">
+<style>
+:root{
+  --sea-deep:#1E90C8; --sea-light:#8FE3F5; --sky:#BFF0FB; --sand:#FFEFC2; --sand-dark:#F5D98B;
+  --palm:#3BC47A; --coral:#FF7A59; --navy:#1B3A52; --white:#FFFFFF;
+  --gold:#FFC93C; --wrong:#E74C3C; --right:#27AE60;
+  --k1:#FFD6A5; --k2:#CAFFBF; --k3:#A0E7FF; --k4:#FFC6E5;
+  --radius:26px; --shadow:0 8px 20px rgba(27,58,82,.20);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'Nunito',sans-serif; color:var(--navy);
+  background:linear-gradient(180deg,var(--sky) 0%,var(--sea-light) 40%,var(--sea-deep) 100%);
+  min-height:100vh; touch-action:manipulation; overflow-x:hidden;
+}
+.deco{position:fixed; pointer-events:none; z-index:0; font-size:44px; opacity:.9;}
+#deco-sun{top:14px; right:18px; font-size:56px; animation:spin 30s linear infinite;}
+#deco-cloud1{top:60px; left:-60px; animation:cloud 42s linear infinite;}
+#deco-cloud2{top:130px; left:-120px; font-size:34px; animation:cloud 60s linear infinite; animation-delay:-20s;}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes cloud{from{transform:translateX(-80px)}to{transform:translateX(110vw)}}
+@media (prefers-reduced-motion: reduce){ .deco{animation:none !important;} }
+h1,h2,h3,.display{font-family:'Baloo 2',cursive;}
+button{font-family:inherit; cursor:pointer; border:none;}
+.screen{display:none; min-height:100vh; padding:16px; max-width:860px; margin:0 auto;}
+.screen.active{display:flex; flex-direction:column;}
+
+/* ---------- vlny (podpis designu) ---------- */
+.waves{position:fixed; left:0; right:0; bottom:0; height:90px; pointer-events:none; opacity:.5; z-index:0;}
+.waves svg{width:200%; height:100%; animation:drift 14s linear infinite;}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion: reduce){ .waves svg{animation:none;} *{transition:none !important;} }
+
+/* ---------- Úvod ---------- */
+#screen-start{justify-content:center; align-items:center; text-align:center; gap:14px;}
+.boat{font-size:72px; line-height:1;}
+#screen-start h1{font-size:clamp(34px,7vw,54px); margin:0; color:var(--white); text-shadow:0 3px 0 rgba(23,56,74,.25);}
+#screen-start .subtitle{color:#EAF7FB; font-weight:700; font-size:clamp(15px,3vw,18px); max-width:520px; margin:0;}
+.card{background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px;}
+#start-card{width:min(440px,94vw); display:flex; flex-direction:column; gap:12px;}
+#start-card label{font-weight:800; text-align:left;}
+#name-input{
+  font-size:20px; padding:12px 14px; border:3px solid var(--sea-deep);
+  border-radius:14px; font-family:inherit; font-weight:700; width:100%;
+}
+.btn{
+  border-radius:16px; font-weight:800; font-size:20px; padding:14px 22px;
+  box-shadow:0 4px 0 rgba(0,0,0,.18); transition:transform .08s;
+}
+.btn:active{transform:translateY(3px); box-shadow:0 1px 0 rgba(0,0,0,.18);}
+.btn-primary{background:var(--coral); color:var(--white);}
+.btn-secondary{background:var(--sand); color:var(--navy);}
+.credit{color:#DFF3F8; font-size:14px; font-weight:700; margin-top:8px;}
+
+/* ---------- Mapa ---------- */
+#screen-map h2{color:var(--white); text-align:center; font-size:clamp(26px,5vw,36px); margin:6px 0 2px; text-shadow:0 2px 0 rgba(23,56,74,.25);}
+#map-hello{text-align:center; color:#EAF7FB; font-weight:700; margin:0 0 14px;}
+.map-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; z-index:1;}
+.island{
+  background:var(--sand); border-radius:var(--radius); padding:18px 16px;
+  box-shadow:var(--shadow); text-align:center; border:4px solid var(--sand-dark);
+  display:flex; flex-direction:column; gap:6px; align-items:center;
+  transition:transform .15s;
+}
+.island:hover{transform:translateY(-4px) rotate(-1deg);}
+.island:active{transform:scale(.97);}
+.island .emo{font-size:52px; line-height:1; animation:bob 3s ease-in-out infinite;}
+.island:nth-child(2n) .emo{animation-delay:-1.5s;}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-6px) rotate(3deg)}}
+@media (prefers-reduced-motion: reduce){ .island .emo{animation:none;} }
+.island h3{margin:0; font-size:20px;}
+.island .desc{font-size:14px; font-weight:600; color:#5C7484; margin:0;}
+.island .stars{font-size:22px; letter-spacing:3px;}
+.island.treasure{background:linear-gradient(160deg,#FFE9A8,#F6B93B); border-color:#D99A1B;}
+.island.treasure.locked{filter:grayscale(.55); opacity:.8;}
+.star-on{color:var(--gold); text-shadow:0 1px 0 rgba(0,0,0,.25);}
+.star-off{color:#C9B98F;}
+.map-footer{text-align:center; color:#DFF3F8; font-size:13px; font-weight:700; margin-top:18px; z-index:1;}
+
+/* ---------- Výběr úrovně ---------- */
+.overlay{
+  position:fixed; inset:0; background:rgba(12,40,55,.55); display:none;
+  align-items:center; justify-content:center; z-index:20; padding:16px;
+}
+.overlay.active{display:flex;}
+.level-card{width:min(420px,94vw); text-align:center;}
+.level-card h3{margin:4px 0 2px; font-size:26px;}
+.level-card .desc{margin:0 0 14px; color:#5C7484; font-weight:700;}
+.level-btns{display:flex; flex-direction:column; gap:10px;}
+.level-btn{
+  display:flex; justify-content:space-between; align-items:center;
+  background:var(--sand); border-radius:14px; padding:14px 18px;
+  font-size:19px; font-weight:800; color:var(--navy);
+}
+.level-btn .lv-stars{font-size:20px;}
+.close-x{margin-top:14px; background:none; font-weight:800; color:#5C7484; font-size:16px;}
+
+/* ---------- Hra ---------- */
+#screen-game{gap:10px;}
+.game-top{display:flex; align-items:center; justify-content:space-between; color:var(--white); font-weight:800;}
+.game-top .title{font-family:'Baloo 2'; font-size:20px; text-shadow:0 2px 0 rgba(23,56,74,.25);}
+#quit-btn{background:rgba(255,255,255,.25); color:var(--white); border-radius:12px; padding:8px 14px; font-weight:800; font-size:16px;}
+.dots{display:flex; gap:6px; justify-content:center; margin:2px 0;}
+.dot{width:14px; height:14px; border-radius:50%; background:rgba(255,255,255,.4);}
+.dot.done-right{background:var(--right);}
+.dot.done-wrong{background:var(--wrong);}
+.dot.current{background:var(--white); outline:3px solid var(--gold);}
+#task-card{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; min-height:220px;}
+.prompt-line{font-family:'Baloo 2'; font-size:clamp(30px,7vw,44px); display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center;}
+.ans-box{
+  min-width:76px; height:60px; border:3px dashed var(--sea-deep); border-radius:14px;
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:32px; font-weight:800; padding:0 10px; background:#F2FAFD;
+}
+.ans-box.active{border-style:solid; background:#FFF7E0; border-color:var(--gold);}
+.ans-box.small{min-width:60px;}
+.divrem-label{font-size:clamp(20px,4vw,26px); font-weight:800; color:#5C7484;}
+
+/* sloupcové počítání */
+.column-wrap{display:flex; flex-direction:column; align-items:flex-end; gap:4px; font-family:'Baloo 2'; font-size:38px;}
+.col-row{display:flex; gap:6px;}
+.col-cell{width:52px; height:56px; display:flex; align-items:center; justify-content:center;}
+.col-cell.op{color:var(--coral);}
+.col-line{height:5px; background:var(--navy); border-radius:3px; align-self:stretch; margin:2px 0;}
+.col-input{
+  width:52px; height:56px; border:3px dashed var(--sea-deep); border-radius:12px;
+  display:flex; align-items:center; justify-content:center; font-weight:800; background:#F2FAFD;
+}
+.col-input.active{border-style:solid; background:#FFF7E0; border-color:var(--gold);}
+
+#feedback{
+  min-height:44px; text-align:center; font-weight:800; font-size:20px;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+#feedback.ok{color:#0E6E3C;}
+#feedback.no{color:#B03024;}
+#feedback::before{content:''; font-size:28px;}
+#feedback.ok::before{content:'🦜';}
+#feedback.no::before{content:'🦜';}
+.shake{animation:shake .35s;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+.keypad{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; max-width:480px; margin:0 auto; width:100%;}
+.key{
+  background:var(--white); border-radius:18px; font-size:30px; font-weight:800;
+  padding:16px 0; box-shadow:0 4px 0 rgba(0,0,0,.15); color:var(--navy);
+  border:3px solid rgba(27,58,82,.12);
+}
+.key:nth-child(4n+1){background:var(--k1);}
+.key:nth-child(4n+2){background:var(--k2);}
+.key:nth-child(4n+3){background:var(--k3);}
+.key:nth-child(4n+4){background:var(--k4);}
+.key:active{transform:translateY(2px); box-shadow:0 1px 0 rgba(0,0,0,.15);}
+.key.back{background:var(--sand); font-size:22px;}
+#check-btn{width:100%; max-width:480px; margin:6px auto 4px;}
+#next-btn{display:none; width:100%; max-width:480px; margin:6px auto 4px; background:var(--sea-deep); color:var(--white);}
+
+/* ---------- Shrnutí ---------- */
+#screen-summary{justify-content:center; align-items:center; text-align:center; gap:12px;}
+#summary-card{width:min(480px,94vw); display:flex; flex-direction:column; gap:10px; align-items:center;}
+#summary-star{font-size:72px; animation:pop .5s ease;}
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
+.confetti{position:fixed; top:-30px; font-size:26px; z-index:30; animation:fall linear forwards; pointer-events:none;}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg); opacity:.7;}}
+@media (prefers-reduced-motion: reduce){ #summary-star{animation:none;} .confetti{display:none;} }
+#summary-card h2{margin:0; font-size:30px;}
+#summary-score{font-size:20px; font-weight:800;}
+#summary-mistakes{width:100%; text-align:left; font-weight:700; background:#FFF3EC; border-radius:14px; padding:12px 14px; font-size:16px;}
+#summary-mistakes ul{margin:6px 0 0; padding-left:20px;}
+.summary-btns{display:flex; gap:10px; flex-wrap:wrap; justify-content:center;}
+
+/* ---------- Diplom ---------- */
+#screen-diploma{justify-content:center; align-items:center;}
+#diploma-card{
+  width:min(560px,94vw); text-align:center; border:6px double var(--gold); padding:34px 24px;
+  display:flex; flex-direction:column; gap:8px; align-items:center;
+}
+#diploma-card .emo{font-size:56px;}
+#diploma-card h2{margin:0; font-size:34px; color:var(--coral);}
+#diploma-name{font-family:'Baloo 2'; font-size:30px; margin:4px 0;}
+#diploma-card p{margin:2px 0; font-weight:700;}
+#diploma-sign{margin-top:14px; border-top:2px solid var(--navy); padding-top:6px; font-weight:800;}
+@media print{
+  body{background:var(--white);} .screen{display:none !important;}
+  #screen-diploma{display:flex !important;} .no-print{display:none !important;} .waves{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="deco-sun" class="deco" aria-hidden="true">☀️</div>
+<div id="deco-cloud1" class="deco" aria-hidden="true">☁️</div>
+<div id="deco-cloud2" class="deco" aria-hidden="true">☁️</div>
+
+<div class="waves" aria-hidden="true">
+<svg viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C100,15 200,75 300,45 C400,15 500,75 600,45 C700,15 800,75 900,45 C1000,15 1100,75 1200,45 L1200,90 L0,90 Z" fill="#0F5E80"/></svg>
+</div>
+
+<!-- ÚVOD -->
+<section id="screen-start" class="screen active">
+  <div class="boat">⛵</div>
+  <h1>Matematická expedice</h1>
+  <p class="subtitle">Opakování a procvičování učiva třetího ročníku – matematika</p>
+  <div id="start-card" class="card">
+    <label for="name-input">Jak se jmenuješ, průzkumníku?</label>
+    <input id="name-input" type="text" maxlength="24" placeholder="Napiš své jméno" autocomplete="off">
+    <button class="btn btn-primary" id="start-btn">Vyplout! ⛵</button>
+  </div>
+  <p class="credit">Mgr. Helena Gřivová</p>
+</section>
+
+<!-- MAPA -->
+<section id="screen-map" class="screen">
+  <h2>🗺️ Mapa expedice</h2>
+  <p id="map-hello"></p>
+  <div class="map-grid" id="map-grid"></div>
+  <p class="map-footer">Mgr. Helena Gřivová · Opakování a procvičování učiva třetího ročníku – matematika</p>
+</section>
+
+<!-- VÝBĚR ÚROVNĚ -->
+<div class="overlay" id="level-overlay">
+  <div class="card level-card">
+    <div class="emo" id="level-emo" style="font-size:44px;"></div>
+    <h3 id="level-title"></h3>
+    <p class="desc" id="level-desc"></p>
+    <div class="level-btns" id="level-btns"></div>
+    <button class="close-x" id="level-close">✕ Zavřít</button>
+  </div>
+</div>
+
+<!-- HRA -->
+<section id="screen-game" class="screen">
+  <div class="game-top">
+    <span class="title" id="game-title"></span>
+    <button id="quit-btn">✕ Mapa</button>
+  </div>
+  <div class="dots" id="dots"></div>
+  <div class="card" id="task-card"></div>
+  <div id="feedback"></div>
+  <div class="keypad" id="keypad"></div>
+  <button class="btn btn-primary" id="check-btn">Zkontrolovat ✔</button>
+  <button class="btn" id="next-btn">Další příklad ➜</button>
+</section>
+
+<!-- SHRNUTÍ -->
+<section id="screen-summary" class="screen">
+  <div id="summary-card" class="card">
+    <div id="summary-star"></div>
+    <h2 id="summary-heading"></h2>
+    <div id="summary-score"></div>
+    <div id="summary-mistakes"></div>
+    <div class="summary-btns">
+      <button class="btn btn-secondary" id="summary-again">Hrát znovu 🔁</button>
+      <button class="btn btn-primary" id="summary-map">Zpět na mapu 🗺️</button>
+    </div>
+  </div>
+</section>
+
+<!-- DIPLOM -->
+<section id="screen-diploma" class="screen">
+  <div id="diploma-card" class="card">
+    <div class="emo">🏆</div>
+    <h2>DIPLOM</h2>
+    <p>za úspěšné dokončení</p>
+    <p style="font-weight:800; font-size:20px;">Matematické expedice</p>
+    <div id="diploma-name"></div>
+    <p>prozkoumal/a všechny ostrovy a zvládl/a učivo matematiky 3. ročníku</p>
+    <p id="diploma-date"></p>
+    <div id="diploma-sign">Mgr. Helena Gřivová</div>
+    <div class="summary-btns no-print" style="margin-top:14px;">
+      <button class="btn btn-secondary" id="diploma-print">Vytisknout 🖨️</button>
+      <button class="btn btn-primary" id="diploma-map">Zpět na mapu 🗺️</button>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ================== ULOŽIŠTĚ (bezpečné – funguje i bez localStorage) ================== */
+const store = (() => {
+  let mem = {}; let ok = false;
+  try { localStorage.setItem('__t','1'); localStorage.removeItem('__t'); ok = true; } catch(e){}
+  return {
+    get(k){ try { return ok ? localStorage.getItem(k) : (mem[k] ?? null); } catch(e){ return mem[k] ?? null; } },
+    set(k,v){ mem[k]=v; try { if(ok) localStorage.setItem(k,v); } catch(e){} }
+  };
+})();
+
+/* ================== DATA OSTROVŮ ================== */
+const ISLANDS = [
+  { id:'nasobilka', emo:'🏝️', name:'Ostrov násobilky', desc:'Malá násobilka' },
+  { id:'deleni',    emo:'⛰️', name:'Hora dělení', desc:'Dělení se zbytkem' },
+  { id:'pisnas',    emo:'🌋', name:'Sopka násobení', desc:'Písemné násobení do 1 000' },
+  { id:'piscit',    emo:'🌊', name:'Záliv počítání', desc:'Písemné + a − do 1 000' },
+  { id:'destovky',  emo:'💨', name:'Větrná rokle', desc:'Násobení a dělení 10 a 100' },
+  { id:'zaokrouhl', emo:'🗿', name:'Údolí zaokrouhlování', desc:'Na desítky a stovky do 1 000' },
+];
+const QUESTIONS_PER_ROUND = 8;
+const STAR_THRESHOLD = 6; // správně na 1. pokus
+
+/* ================== STAV ================== */
+let state = { name:'', stars:{} };
+(function load(){
+  const raw = store.get('expedice-stav');
+  if(raw){ try{ state = JSON.parse(raw); }catch(e){} }
+  ISLANDS.forEach(i => { if(!state.stars[i.id]) state.stars[i.id]=[false,false,false]; });
+})();
+function save(){ store.set('expedice-stav', JSON.stringify(state)); }
+
+/* ================== POMOCNÉ ================== */
+const $ = id => document.getElementById(id);
+const rnd = (min,max) => Math.floor(Math.random()*(max-min+1))+min;
+const pick = arr => arr[rnd(0,arr.length-1)];
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $(id).classList.add('active');
+}
+const PRAISE = ['Výborně! 🎉','Skvěle! ⭐','Přesně tak! 👍','Paráda! 🌟','Super! 💪'];
+
+/* ================== GENERÁTORY PŘÍKLADŮ ================== */
+function genNasobilka(level){
+  if(level===3 && Math.random()<0.5){
+    const a = rnd(2,10), b = rnd(2,10);
+    return { type:'simple', promptParts:[`${a} ×`, 'BOX', `= ${a*b}`], answer:b, text:`${a} × ? = ${a*b}` };
+  }
+  const tables = level===1 ? [2,3,4,5,10] : level===2 ? [6,7,8,9] : [2,3,4,5,6,7,8,9,10];
+  const a = pick(tables), b = rnd(1,10);
+  return { type:'simple', promptParts:[`${a} × ${b} =`, 'BOX'], answer:a*b, text:`${a} × ${b}` };
+}
+function genDeleni(level){
+  const b = rnd(2,10);
+  let q, r;
+  if(level===1){ q = rnd(1,10); r = 0; }
+  else if(level===2){ q = rnd(2,9); r = rnd(1,b-1); }
+  else { r = rnd(0,b-1); q = rnd(3, Math.floor((99-r)/b)); }
+  const a = b*q + r;
+  return { type:'divrem', a, b, answer:q, answer2:r, text:`${a} : ${b}` };
+}
+function genPisNasobeni(level){
+  let a, b, p;
+  do {
+    if(level===1){ a = rnd(12,49); b = rnd(2,4); }
+    else if(level===2){ a = rnd(21,160); b = rnd(2,6); }
+    else { a = rnd(101,499); b = rnd(2,9); }
+    p = a*b;
+  } while(p > 1000);
+  return { type:'column', op:'×', a, b, answer:p, text:`${a} × ${b}` };
+}
+function genPisScitani(level){
+  let mode = level===1 ? '+' : level===2 ? '−' : pick(['+','−']);
+  if(mode==='+'){
+    let a,b;
+    do { a = rnd(115,880); b = rnd(115,880); } while(a+b>999);
+    return { type:'column', op:'+', a, b, answer:a+b, text:`${a} + ${b}` };
+  } else {
+    const a = rnd(220,999), b = rnd(113,a-15);
+    return { type:'column', op:'−', a, b, answer:a-b, text:`${a} − ${b}` };
+  }
+}
+function genDesetStovky(level){
+  let variants;
+  if(level===1) variants = ['x10','x100'];
+  else if(level===2) variants = ['d10','d100'];
+  else variants = ['x10','x100','d10','d100'];
+  const v = pick(variants);
+  if(v==='x10'){ const n = rnd(2,99);  return { type:'simple', promptParts:[`${n} × 10 =`,'BOX'], answer:n*10, text:`${n} × 10` }; }
+  if(v==='x100'){ const n = rnd(2,9);  return { type:'simple', promptParts:[`${n} × 100 =`,'BOX'], answer:n*100, text:`${n} × 100` }; }
+  if(v==='d10'){ const k = rnd(2,99);  return { type:'simple', promptParts:[`${k*10} : 10 =`,'BOX'], answer:k, text:`${k*10} : 10` }; }
+  const k = rnd(2,9); return { type:'simple', promptParts:[`${k*100} : 100 =`,'BOX'], answer:k, text:`${k*100} : 100` };
+}
+function roundTo(n, step){ return Math.round(n/step)*step; }
+function genZaokrouhlovani(level){
+  const step = level===1 ? 10 : level===2 ? 100 : pick([10,100]);
+  let n;
+  do { n = step===10 ? rnd(11,994) : rnd(50,994); } while(n % step === 0);
+  const label = step===10 ? 'desítky' : 'stovky';
+  return { type:'simple', promptParts:[`Zaokrouhli na ${label}:`, `${n} ≐`, 'BOX'], answer:roundTo(n,step), text:`${n} na ${label}` };
+}
+const GENERATORS = {
+  nasobilka:genNasobilka, deleni:genDeleni, pisnas:genPisNasobeni,
+  piscit:genPisScitani, destovky:genDesetStovky, zaokrouhl:genZaokrouhlovani
+};
+
+/* ================== MAPA ================== */
+function starStr(arr){
+  return arr.map(s=>`<span class="${s?'star-on':'star-off'}">★</span>`).join('');
+}
+function allIslandsStarted(){
+  return ISLANDS.every(i => state.stars[i.id].some(Boolean));
+}
+function renderMap(){
+  $('map-hello').textContent = `Ahoj, ${state.name}! Vyber si ostrov a vydej se na výpravu.`;
+  const grid = $('map-grid'); grid.innerHTML='';
+  ISLANDS.forEach(isl=>{
+    const el = document.createElement('button');
+    el.className='island';
+    el.innerHTML = `<div class="emo">${isl.emo}</div><h3>${isl.name}</h3>
+      <p class="desc">${isl.desc}</p><div class="stars">${starStr(state.stars[isl.id])}</div>`;
+    el.onclick = ()=>openLevelSelect(isl);
+    grid.appendChild(el);
+  });
+  const unlocked = allIslandsStarted();
+  const tr = document.createElement('button');
+  tr.className = 'island treasure' + (unlocked?'':' locked');
+  tr.innerHTML = unlocked
+    ? `<div class="emo">🏆</div><h3>Poklad expedice</h3><p class="desc">Otevři svůj diplom!</p><div class="stars">✨✨✨</div>`
+    : `<div class="emo">🔒</div><h3>Poklad expedice</h3><p class="desc">Získej hvězdu na každém ostrově</p><div class="stars">🗝️</div>`;
+  tr.onclick = ()=>{ if(unlocked) showDiploma(); };
+  grid.appendChild(tr);
+  show('screen-map');
+}
+
+/* ================== VÝBĚR ÚROVNĚ ================== */
+let currentIsland = null;
+function openLevelSelect(isl){
+  currentIsland = isl;
+  $('level-emo').textContent = isl.emo;
+  $('level-title').textContent = isl.name;
+  $('level-desc').textContent = isl.desc;
+  const wrap = $('level-btns'); wrap.innerHTML='';
+  for(let lv=1; lv<=3; lv++){
+    const b = document.createElement('button');
+    b.className='level-btn';
+    const got = state.stars[isl.id][lv-1];
+    b.innerHTML = `<span>Úroveň ${lv}</span><span class="lv-stars ${got?'star-on':'star-off'}">★</span>`;
+    b.onclick = ()=>{ $('level-overlay').classList.remove('active'); startRound(isl, lv); };
+    wrap.appendChild(b);
+  }
+  $('level-overlay').classList.add('active');
+}
+$('level-close').onclick = ()=>$('level-overlay').classList.remove('active');
+
+/* ================== PRŮBĚH KOLA ================== */
+let round = null;
+function startRound(isl, level){
+  const qs = [];
+  for(let i=0;i<QUESTIONS_PER_ROUND;i++) qs.push(GENERATORS[isl.id](level));
+  round = { island:isl, level, qs, idx:0, attempts:0, firstTry:0, results:[], mistakes:[] };
+  $('game-title').textContent = `${isl.emo} ${isl.name} · úroveň ${level}`;
+  show('screen-game');
+  renderKeypad();
+  renderQuestion();
+}
+function renderDots(){
+  const d = $('dots'); d.innerHTML='';
+  round.qs.forEach((_,i)=>{
+    const s = document.createElement('span');
+    s.className='dot';
+    if(i<round.idx) s.classList.add(round.results[i]?'done-right':'done-wrong');
+    if(i===round.idx) s.classList.add('current');
+    d.appendChild(s);
+  });
+}
+
+/* ---------- vstupní pole ---------- */
+let inputs = [];       // [{el, value, maxLen}]
+let activeInput = 0;
+
+function makeBox(cls, maxLen){
+  const el = document.createElement('span');
+  el.className = cls;
+  const obj = { el, value:'', maxLen };
+  el.onclick = ()=>{ setActive(inputs.indexOf(obj)); };
+  inputs.push(obj);
+  return el;
+}
+function setActive(i){
+  activeInput = i;
+  inputs.forEach((o,j)=>o.el.classList.toggle('active', j===i));
+}
+function refreshBoxes(){ inputs.forEach(o=>o.el.textContent = o.value); }
+
+function renderQuestion(){
+  const q = round.qs[round.idx];
+  round.attempts = 0;
+  inputs = []; activeInput = 0;
+  $('feedback').textContent=''; $('feedback').className='';
+  $('check-btn').style.display='block';
+  $('next-btn').style.display='none';
+  renderDots();
+  const card = $('task-card'); card.innerHTML='';
+
+  if(q.type==='simple'){
+    const line = document.createElement('div'); line.className='prompt-line';
+    q.promptParts.forEach(part=>{
+      if(part==='BOX'){ line.appendChild(makeBox('ans-box', 4)); }
+      else { const s=document.createElement('span'); s.textContent=part; line.appendChild(s); }
+    });
+    card.appendChild(line);
+  }
+  else if(q.type==='divrem'){
+    const line = document.createElement('div'); line.className='prompt-line';
+    const t1=document.createElement('span'); t1.textContent=`${q.a} : ${q.b} =`;
+    line.appendChild(t1);
+    line.appendChild(makeBox('ans-box small', 2));
+    const zb=document.createElement('span'); zb.className='divrem-label'; zb.textContent='zbytek';
+    line.appendChild(zb);
+    line.appendChild(makeBox('ans-box small', 1));
+    card.appendChild(line);
+  }
+  else if(q.type==='column'){
+    const aStr = String(q.a), bStr = String(q.b), ansLen = String(q.answer).length;
+    const width = Math.max(aStr.length, bStr.length, ansLen) + 1; // +1 sloupec pro znaménko
+    const wrap = document.createElement('div'); wrap.className='column-wrap';
+    const rowOf = (digits, opChar) => {
+      const row = document.createElement('div'); row.className='col-row';
+      const cells = [];
+      for(let i=0;i<width;i++) cells.push('');
+      // číslice zprava
+      const ds = digits.split('');
+      for(let i=0;i<ds.length;i++) cells[width-1-i] = ds[ds.length-1-i];
+      if(opChar) cells[0] = opChar;
+      cells.forEach((c,i)=>{
+        const cell = document.createElement('span');
+        cell.className = 'col-cell' + (i===0 && opChar ? ' op' : '');
+        cell.textContent = c;
+        row.appendChild(cell);
+      });
+      return row;
+    };
+    wrap.appendChild(rowOf(aStr, ''));
+    wrap.appendChild(rowOf(bStr, q.op));
+    const line = document.createElement('div'); line.className='col-line'; wrap.appendChild(line);
+    // odpovědní řádek – boxy zprava
+    const ansRow = document.createElement('div'); ansRow.className='col-row';
+    for(let i=0;i<width-ansLen;i++){
+      const sp=document.createElement('span'); sp.className='col-cell'; ansRow.appendChild(sp);
+    }
+    const boxObjs = [];
+    for(let i=0;i<ansLen;i++){
+      const b = makeBox('col-input', 1);
+      ansRow.appendChild(b);
+    }
+    wrap.appendChild(ansRow);
+    card.appendChild(wrap);
+    // aktivní: nejpravější box (počítáme zprava)
+    setActive(inputs.length-1);
+    refreshBoxes();
+    return;
+  }
+  setActive(0);
+  refreshBoxes();
+}
+
+/* ---------- klávesnice ---------- */
+function renderKeypad(){
+  const kp = $('keypad'); kp.innerHTML='';
+  const keys = ['1','2','3','4','5','6','7','8','9','0'];
+  keys.forEach(k=>{
+    const b=document.createElement('button'); b.className='key'; b.textContent=k;
+    b.onclick=()=>pressKey(k); kp.appendChild(b);
+  });
+  const back=document.createElement('button'); back.className='key back'; back.textContent='⌫ smazat';
+  back.style.gridColumn='span 5';
+  back.onclick=()=>pressBack(); kp.appendChild(back);
+}
+function pressKey(k){
+  if($('next-btn').style.display==='block') return;
+  const q = round.qs[round.idx];
+  const o = inputs[activeInput];
+  if(!o) return;
+  if(q.type==='column'){
+    o.value = k; refreshBoxes();
+    // posun doleva na další prázdný box
+    for(let i=activeInput-1;i>=0;i--){ if(inputs[i].value===''){ setActive(i); return; } }
+  } else {
+    if(o.value.length < o.maxLen){ o.value += k; refreshBoxes(); }
+    if(q.type==='divrem' && activeInput===0 && o.value.length>=o.maxLen){ setActive(1); }
+  }
+}
+function pressBack(){
+  if($('next-btn').style.display==='block') return;
+  const o = inputs[activeInput];
+  if(!o) return;
+  if(o.value===''){
+    // u sloupcového: přesun doprava na poslední vyplněný
+    for(let i=activeInput+1;i<inputs.length;i++){ if(inputs[i].value!==''){ setActive(i); inputs[i].value=''; refreshBoxes(); return; } }
+    return;
+  }
+  o.value = o.value.slice(0,-1); refreshBoxes();
+}
+document.addEventListener('keydown', e=>{
+  if(!$('screen-game').classList.contains('active')) return;
+  if(e.key>='0' && e.key<='9') pressKey(e.key);
+  else if(e.key==='Backspace'){ e.preventDefault(); pressBack(); }
+  else if(e.key==='Enter'){
+    if($('next-btn').style.display==='block') $('next-btn').click();
+    else $('check-btn').click();
+  }
+});
+
+/* ---------- kontrola ---------- */
+function collectAnswer(){
+  const q = round.qs[round.idx];
+  if(q.type==='column'){
+    if(inputs.some(o=>o.value==='')) return null;
+    return parseInt(inputs.map(o=>o.value).join(''), 10);
+  }
+  if(q.type==='divrem'){
+    if(inputs[0].value==='' || inputs[1].value==='') return null;
+    return [parseInt(inputs[0].value,10), parseInt(inputs[1].value,10)];
+  }
+  if(inputs[0].value==='') return null;
+  return parseInt(inputs[0].value,10);
+}
+function isCorrect(q, val){
+  if(q.type==='divrem') return val[0]===q.answer && val[1]===q.answer2;
+  return val===q.answer;
+}
+$('check-btn').onclick = ()=>{
+  const q = round.qs[round.idx];
+  const val = collectAnswer();
+  const fb = $('feedback');
+  if(val===null){ fb.textContent='Doplň všechna políčka. ✏️'; fb.className='no'; return; }
+  if(isCorrect(q,val)){
+    fb.textContent = pick(PRAISE); fb.className='ok';
+    const first = round.attempts===0;
+    if(first) round.firstTry++;
+    round.results.push(true);
+    goNextSoon();
+  } else {
+    round.attempts++;
+    if(round.attempts===1){
+      fb.textContent='Zkus to ještě jednou! 🔍'; fb.className='no';
+      $('task-card').classList.add('shake');
+      setTimeout(()=>$('task-card').classList.remove('shake'), 400);
+    } else {
+      const correct = q.type==='divrem' ? `${q.answer}, zbytek ${q.answer2}` : q.answer;
+      fb.textContent = `Správně je: ${correct}. Další zvládneš! 💪`; fb.className='no';
+      round.results.push(false);
+      round.mistakes.push({ text:q.text, correct });
+      $('check-btn').style.display='none';
+      $('next-btn').style.display='block';
+    }
+  }
+};
+function goNextSoon(){
+  $('check-btn').style.display='none';
+  setTimeout(nextQuestion, 900);
+}
+$('next-btn').onclick = nextQuestion;
+function nextQuestion(){
+  round.idx++;
+  if(round.idx >= round.qs.length) endRound();
+  else renderQuestion();
+}
+$('quit-btn').onclick = ()=>renderMap();
+
+/* ---------- shrnutí ---------- */
+function endRound(){
+  const earned = round.firstTry >= STAR_THRESHOLD;
+  if(earned){
+    state.stars[round.island.id][round.level-1] = true;
+    save();
+  }
+  $('summary-star').textContent = earned ? '⭐' : '🧭';
+  if(earned) throwConfetti();
+  $('summary-heading').textContent = earned ? 'Hvězda získána!' : 'Výprava dokončena!';
+  $('summary-score').textContent = `Správně na první pokus: ${round.firstTry} z ${round.qs.length}`;
+  const mw = $('summary-mistakes');
+  if(round.mistakes.length){
+    mw.style.display='block';
+    mw.innerHTML = '<strong>Na tohle se ještě podívej:</strong><ul>' +
+      round.mistakes.map(m=>`<li>${m.text} → <strong>${m.correct}</strong></li>`).join('') + '</ul>';
+  } else {
+    mw.style.display='block';
+    mw.innerHTML = '<strong>Vše bez chyby na druhý pokus – skvělá práce! 🎉</strong>';
+    if(!round.mistakes.length && round.firstTry===round.qs.length){
+      mw.innerHTML = '<strong>Úplně bez chyby – parádní výkon! 🎉</strong>';
+    }
+  }
+  show('screen-summary');
+}
+function throwConfetti(){
+  const emo = ['🎉','⭐','🌟','🎊','🐚','🦜'];
+  for(let i=0;i<18;i++){
+    const c = document.createElement('span');
+    c.className='confetti';
+    c.textContent = pick(emo);
+    c.style.left = rnd(2,96)+'vw';
+    c.style.animationDuration = (rnd(18,32)/10)+'s';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 3600);
+  }
+}
+$('summary-again').onclick = ()=>startRound(round.island, round.level);
+$('summary-map').onclick = ()=>renderMap();
+
+/* ---------- diplom ---------- */
+function showDiploma(){
+  $('diploma-name').textContent = state.name;
+  const d = new Date();
+  $('diploma-date').textContent = `V Kroměříži dne ${d.getDate()}. ${d.getMonth()+1}. ${d.getFullYear()}`;
+  show('screen-diploma');
+}
+$('diploma-print').onclick = ()=>window.print();
+$('diploma-map').onclick = ()=>renderMap();
+
+/* ---------- start ---------- */
+$('start-btn').onclick = ()=>{
+  const n = $('name-input').value.trim();
+  state.name = n || 'Průzkumník';
+  save();
+  renderMap();
+};
+$('name-input').addEventListener('keydown', e=>{ if(e.key==='Enter') $('start-btn').click(); });
+if(state.name){ $('name-input').value = state.name; }
+</script>
+</body>
+</html>
