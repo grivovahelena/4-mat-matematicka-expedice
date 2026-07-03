@@ -107,7 +107,7 @@ button{font-family:inherit; cursor:pointer; border:none;}
 #screen-game{gap:10px;}
 .game-top{display:flex; align-items:center; justify-content:space-between; color:var(--white); font-weight:800;}
 .game-top .title{font-family:'Baloo 2'; font-size:20px; text-shadow:0 2px 0 rgba(23,56,74,.25);}
-#quit-btn{background:rgba(255,255,255,.25); color:var(--white); border-radius:12px; padding:8px 14px; font-weight:800; font-size:16px;}
+#quit-btn{background:var(--white); color:var(--navy); border-radius:12px; padding:8px 14px; font-weight:800; font-size:16px; box-shadow:0 3px 0 rgba(0,0,0,.18); white-space:nowrap;}
 .dots{display:flex; gap:6px; justify-content:center; margin:2px 0;}
 .dot{width:14px; height:14px; border-radius:50%; background:rgba(255,255,255,.4);}
 .dot.done-right{background:var(--right);}
@@ -232,7 +232,7 @@ button{font-family:inherit; cursor:pointer; border:none;}
     <h3 id="level-title"></h3>
     <p class="desc" id="level-desc"></p>
     <div class="level-btns" id="level-btns"></div>
-    <button class="close-x" id="level-close">✕ Zavřít</button>
+    <button class="close-x" id="level-close">🗺️ Zpět na mapu</button>
   </div>
 </div>
 
@@ -240,7 +240,7 @@ button{font-family:inherit; cursor:pointer; border:none;}
 <section id="screen-game" class="screen">
   <div class="game-top">
     <span class="title" id="game-title"></span>
-    <button id="quit-btn">✕ Mapa</button>
+    <button id="quit-btn">🗺️ Zpět na mapu</button>
   </div>
   <div class="dots" id="dots"></div>
   <div class="card" id="task-card"></div>
